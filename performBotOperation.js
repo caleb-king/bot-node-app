@@ -1,89 +1,87 @@
 const motors = require('./motors');
 
 const turnOffMotors = function() {
-  motors.rightWheelForward.pwmWrite(motors.dutyCycleOff);
-  motors.rightWheelBackward.pwmWrite(motors.dutyCycleOff);
-  motors.leftWheelForward.pwmWrite(motors.dutyCycleOff);
-  motors.leftWheelBackward.pwmWrite(motors.dutyCycleOff);
+  console.log('all motors turned off');
+  //motors.rightWheelForward.pwmWrite(motors.dutyCycleOff);
+  //motors.rightWheelBackward.pwmWrite(motors.dutyCycleOff);
+  //motors.leftWheelForward.pwmWrite(motors.dutyCycleOff);
+  //motors.leftWheelBackward.pwmWrite(motors.dutyCycleOff);
 };
 
-const setServoPW = function(command, isPan, servoPW, increment, intervalId) {
-  isPan 
-    ? motors.panServo.servoWrite(increment) 
-    : motors.tiltServo.servoWrite(increment);
-
-  if(increment > 0) {
-    if(servoPW < (2500 - increment)) {
-      servoPW += increment;
-    }
-  } else {
-    if(servoPW > (500 + increment)) {
-      servoPW += increment;
-    }
-  }
-  if (command !== global.command) {
-    clearInterval(intervalId);
-  }
-};
-
-const rotateServo = function(command, isPan, servoPW, increment, interval) {
-  let intervalId = setInterval(setServoPW(command, isPan, servoPW, increment, intervalId), interval);
-  intervalId();
-};
+let previousCommand = 'none';
 
 const performBotOperation = function (command) {
-  global.command = command;
+  
   if(command === 'none') {
+    if (previousCommand === 'none') return;
     turnOffMotors();
+    previousCommand = command;
     return;
   }
 
   switch(command) {
       
-  case 'left':
-    console.log('Panning left!');
-    rotateServo(command, true, motors.panServo, -motors.servoIncrement, motors.servoInterval);
-    break;
-
-  case 'up':
-    console.log('Tilting up!');
-    rotateServo(command, false, motors.tiltServo, motors.servoIncrement, motors.servoInterval);
-    break;
-
-  case 'right':
-    console.log('Panning right!');
-    rotateServo(command, true, motors.panServo, motors.servoIncrement, motors.servoInterval);
-    break;
-
-  case 'down':
-    console.log('Tilting down!');
-    rotateServo(command, false, motors.tiltServo, -motors.servoIncrement, motors.servoInterval);
-    break;
-
   case 'spin left':
+    if(command === previousCommand) return;
     console.log('Spinning to the left!');
-    motors.leftWheelBackward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelForward.pwmWrite(motors.dutyCycleOn);
+    //motors.leftWheelBackward.pwmWrite(motors.dutyCycleOn);
+    //motors.rightWheelForward.pwmWrite(motors.dutyCycleOn);
     break;
     
   case 'move forward':
+    if(command === previousCommand) return;
     console.log('Moving forwards!');
-    motors.leftWheelForward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelForward.pwmWrite(motors.dutyCycleOn);
+    //motors.leftWheelForward.pwmWrite(motors.dutyCycleOn);
+    //motors.rightWheelForward.pwmWrite(motors.dutyCycleOn);
     break;
 
   case 'spin right':
+    if(command === previousCommand) return;
     console.log('Spinning to the right!');
-    motors.leftWheelForward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelBackward.pwmWrite(motors.dutyCycleOn);
+    //motors.leftWheelForward.pwmWrite(motors.dutyCycleOn);
+    //motors.rightWheelBackward.pwmWrite(motors.dutyCycleOn);
     break;
 
   case 'move backward':
+    if(command === previousCommand) return;
     console.log('Moving backwards!');
-    motors.leftWheelBackward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelBackward.pwmWrite(motors.dutyCycleOn);
+    //motors.leftWheelBackward.pwmWrite(motors.dutyCycleOn);
+    //motors.rightWheelBackward.pwmWrite(motors.dutyCycleOn);
+    break;
+
+  case 'left':
+    if((motors.panServoPW - motors.servoIncrement) < 1000) break;
+    motors.panServoPW -= motors.servoIncrement;
+    //motors.panServo.servoWrite(motors.panServoPW);
+    console.log('panServo now set to ', motors.panServoPW);
+    break;
+
+  case 'up':
+    if((motors.tiltServoPW + motors.servoIncrement) > 2000) break;
+    motors.tiltServoPW += motors.servoIncrement;
+    //motors.panServo.servoWrite(motors.panServoPW);
+    console.log('tiltServo now set to ', motors.tiltServoPW);
+    break;
+
+  case 'right':
+    if((motors.panServoPW + motors.servoIncrement) > 2000) break;
+    motors.panServoPW += motors.servoIncrement;
+    //motors.panServo.servoWrite(motors.panServoPW);
+    console.log('panServo now set to ', motors.panServoPW);
+    break;
+
+  case 'down':
+    if((motors.tiltServoPW - motors.servoIncrement) < 1000) break;
+    motors.tiltServoPW -= motors.servoIncrement;
+    //motors.panServo.servoWrite(motors.panServoPW);
+    console.log('tiltServo now set to ', motors.tiltServoPW);
     break;
   }
+
+  previousCommand = command;
 };
 
-module.exports = performBotOperation;
+module.exports = {
+  turnOffMotors,
+  performBotOperation,
+};
