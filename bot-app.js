@@ -1,3 +1,4 @@
+const url = 'https://secret-shelf-46048.herokuapp.com/';
 const fetch = require('node-fetch');
 const motors = require('./motors');
 const { performBotOperation, turnOffMotors } = require('./performBotOperation');
@@ -12,7 +13,7 @@ const initializeMotors = function() {
 };
 
 let getCommand = function() {
-  fetch('http://localhost:8000/')
+  fetch(url)
     .then(res => res.text())
     .then(body => performBotOperation(body));
 };
