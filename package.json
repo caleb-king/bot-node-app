@@ -1,8 +1,8 @@
 {
-  "name": "temp-test-scraping-value",
+  "name": "bot-node-app",
   "version": "1.0.0",
   "description": "",
-  "main": "temp-test-scraping-value.js",
+  "main": "bot-app.js",
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
