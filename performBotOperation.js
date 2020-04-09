@@ -24,8 +24,8 @@ const performBotOperation = function (command) {
   case 'spin left':
     if(command === previousCommand) return;
     console.log('Spinning to the left!');
-    motors.leftWheelBackward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelForward.pwmWrite(motors.dutyCycleOn);
+    motors.leftWheelBackward.pwmWrite(motors.spinningDutyCycle);
+    motors.rightWheelForward.pwmWrite(motors.spinningDutyCycle);
     break;
     
   case 'move forward':
@@ -38,8 +38,8 @@ const performBotOperation = function (command) {
   case 'spin right':
     if(command === previousCommand) return;
     console.log('Spinning to the right!');
-    motors.leftWheelForward.pwmWrite(motors.dutyCycleOn);
-    motors.rightWheelBackward.pwmWrite(motors.dutyCycleOn);
+    motors.leftWheelForward.pwmWrite(motors.spinningDutyCycle);
+    motors.rightWheelBackward.pwmWrite(motors.spinningDutyCycle);
     break;
 
   case 'move backward':

@@ -1,11 +1,11 @@
 const Gpio = require('pigpio').Gpio;
 
 const pinNums = {
-  rightWheelForward: 11,
-  rightWheelBackward: 12,
-  leftWheelForward: 15,
-  leftWheelBackward: 16,
-  tiltServo:29,
+  rightWheelForward: 22,
+  rightWheelBackward: 23,
+  leftWheelForward: 18,
+  leftWheelBackward: 17,
+  tiltServo:24,
   panServo: 31
 };
 
@@ -19,7 +19,8 @@ const leftWheelBackward = new Gpio(pinNums.leftWheelBackward, {mode: Gpio.OUTPUT
 
 //dutycycle: 0-range (range defaults to 255)
 const dutyCycleOff = 0;
-const dutyCycleOn = 255;
+const dutyCycleOn = 200;
+const spinningDutyCycle = 125;
 
 
 //Servo Motors
@@ -46,4 +47,5 @@ module.exports = {
   tiltServoPW,
   panServoPW,
   servoIncrement,
+  spinningDutyCycle
 };
