@@ -61,6 +61,15 @@ const performBotOperation = function (command) {
     motors.tiltServoPW += motors.servoIncrement;
     motors.tiltServo.servoWrite(motors.tiltServoPW);
     console.log('tiltServo now set to ', motors.tiltServoPW);
+    
+    //PROBLEM -> There is a jitter in the servo when you leave it powered. 
+    //GENERAL SOLUTION -> When you turn the servo off, it still holds its position.
+    //OPTION 1 -> Start an interval and then trigger the 'servoWrite(0)'.
+    setTimeout(() => motors.tiltServo.servoWrite(0), 30);
+    //OPTION 2 -> Immediately turn off the servo.
+    //motors.tiltServo.servoWrite(0);
+
+    //Another possible solution might be to modify the pwmFrequency(frequency) - see https://github.com/fivdi/pigpio/blob/master/doc/gpio.md#pwmfrequencyfrequency
     break;
 
   case 'right':
@@ -75,6 +84,13 @@ const performBotOperation = function (command) {
     motors.tiltServoPW -= motors.servoIncrement;
     motors.tiltServo.servoWrite(motors.tiltServoPW);
     console.log('tiltServo now set to ', motors.tiltServoPW);
+    
+    //PROBLEM -> There is a jitter in the servo when you leave it powered. 
+    //GENERAL SOLUTION -> When you turn the servo off, it still holds its position.
+    //OPTION 1 -> Start an interval and then trigger the 'servoWrite(0)'.
+    setTimeout(() => motors.tiltServo.servoWrite(0), 30);
+    //OPTION 2 -> Immediately turn off the servo.
+    //motors.tiltServo.servoWrite(0);
     break;
   }
 
